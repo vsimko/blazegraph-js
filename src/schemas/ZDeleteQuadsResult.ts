@@ -8,7 +8,7 @@ export interface ParsedStats {
 export type DeleteQuadsResult = z.infer<typeof ZDeleteQuadsResult>;
 
 export const ZDeleteQuadsResult = z.string().nonempty().transform((input, ctx): ParsedStats => {
-  const dataElement = input.match(/<data\\b([^>]*)\\/?\\s*>/i);
+  const dataElement = input.match(/<data\b([^>]*)\/?\s*>/i);
   if (!dataElement) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
@@ -18,8 +18,9 @@ export const ZDeleteQuadsResult = z.string().nonempty().transform((input, ctx): 
   }
 
   const attributes: Record<string, string> = {};
-  const attributePattern = /([A-Za-z_:][\\w:.-]*)\\s*=\\s*(["'])(.*?)\\2/g;
-  for (const match of dataElement[1].matchAll(attributePattern)) {
+  const attributePattern = /([A-Za-z_:][\w:.-]*)\s*=\s*(["'])(.*?)\2/g;
+  let match: RegExpExecArray | null;
+  while ((match = attributePattern.exec(dataElement[1])) !== null) {
     attributes[match[1]] = match[3];
   }
 
