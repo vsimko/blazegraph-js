@@ -136,7 +136,7 @@ export const updateSparql = (blazeUrl: string) =>
       method: "POST",
       url: `${blazeUrl}?update=${urlEncodeSparqlString(query)}`,
       headers: {Accept: "application/json"},
-    }, z.string().nonempty());
+    }, z.string());
 
     return parseCommitResults(result);
   };
@@ -182,7 +182,7 @@ export const readQuads = (blazeUrl: string) =>
     let fullUrl = `${blazeUrl}?GETSTMTS&includeInferred=${withInferred}&${urlEncodePattern(parse)}`
     if (Array.isArray(parse.graphs)) {
       for (const g of parse.graphs) {
-        fullUrl += `&c=${g}`;
+        fullUrl += `&${urlParam("c", g)}`;
       }
     }
 
