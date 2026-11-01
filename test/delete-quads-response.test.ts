@@ -1,6 +1,9 @@
 import axios, {AxiosRequestConfig, AxiosResponse} from "axios";
-import {expect} from "chai";
+import {expect, use as chaiUse} from "chai";
+import chaiAsPromised from "chai-as-promised";
 import {deleteQuads} from "../src/middleware";
+
+chaiUse(chaiAsPromised);
 
 describe("deleteQuads response parsing", () => {
   const originalAdapter = axios.defaults.adapter;
