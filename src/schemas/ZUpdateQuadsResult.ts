@@ -1,6 +1,5 @@
 import {z} from "zod";
+import {ZMutationResult} from "./ZMutationResult";
 
 export type UpdateQuadsResult = z.infer<typeof ZUpdateQuadsResult>;
-export const ZUpdateQuadsResult = z.string().nonempty().transform(input => {
-  return input; // TODO
-});
+export const ZUpdateQuadsResult = ZMutationResult;
