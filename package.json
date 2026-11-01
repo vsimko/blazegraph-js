@@ -14,12 +14,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nelson-ai/blazegraph-js.git"
+    "url": "git+https://github.com/vsimko/blazegraph-js.git"
   },
   "bugs": {
-    "url": "https://github.com/nelson-ai/blazegraph-js/issues"
+    "url": "https://github.com/vsimko/blazegraph-js/issues"
   },
-  "homepage": "https://github.com/nelson-ai/blazegraph-js#readme",
+  "homepage": "https://github.com/vsimko/blazegraph-js#readme",
   "dependencies": {
     "axios": "0.24.0",
     "n3": "1.12.2",
