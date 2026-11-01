@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    name: Build, lint and test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --non-interactive
+
+      - name: Build
+        run: yarn build
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Start Blazegraph
+        run: docker compose -f test/docker-compose.yml up -d
+
+      - name: Wait for Blazegraph
+        run: |
+          for attempt in $(seq 1 60); do
+            if curl --fail --silent --show-error \
+              'http://localhost:9999/bigdata/namespace/kb/sparql?query=ASK%7B%7D' \
+              -H 'Accept: application/sparql-results+json' >/dev/null; then
+              echo "Blazegraph is ready."
+              exit 0
+            fi
+            echo "Waiting for Blazegraph ($attempt/60)..."
+            sleep 2
+          done
+          echo "Blazegraph did not become ready in time."
+          docker compose -f test/docker-compose.yml logs
+          exit 1
+
+      - name: Test
+        run: yarn test
+
+      - name: Stop Blazegraph
+        if: always()
+        run: docker compose -f test/docker-compose.yml down
