@@ -11,11 +11,11 @@ export interface MutationStats {
  * the existing deleteQuads result contract.
  */
 export const ZMutationResult = z.string().nonempty().transform((input): MutationStats | null => {
-  const attributes = /<data\\b([^>]*)\\/?\\s*>/i.exec(input)?.[1];
+  const attributes = /<data\b([^>]*)\/?\s*>/i.exec(input)?.[1];
   if (attributes === undefined) return null;
 
-  const modified = /\\bmodified="([^"]+)"/i.exec(attributes)?.[1];
-  const milliseconds = /\\bmilliseconds="([^"]+)"/i.exec(attributes)?.[1];
+  const modified = /\bmodified="([^"]+)"/i.exec(attributes)?.[1];
+  const milliseconds = /\bmilliseconds="([^"]+)"/i.exec(attributes)?.[1];
   if (modified === undefined || milliseconds === undefined) return null;
 
   const parsedModified = Number(modified);
