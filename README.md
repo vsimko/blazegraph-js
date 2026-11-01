@@ -5,7 +5,7 @@ This version has been completely rewritten and the new API is still evolving.
 
 ## Installation
 
-`yarn add https://github.com/seronet-project/blazegraph-js`
+`yarn add https://github.com/vsimko/blazegraph-js`
 
 ## Usage
 
@@ -49,7 +49,15 @@ The current API is quite specific to Nelson, but feel free to PR breaking change
 
 ## Contributing
 
-Yes, thank you. Please lint, ~~update/write tests~~ and add your name to the package.json file before you PR.
+Install dependencies with `yarn install`. Before opening a pull request, run:
+
+- `yarn build` to compile the TypeScript sources.
+- `yarn lint` to run ESLint.
+- `yarn test` to run the test suite.
+
+The tests require a running Blazegraph instance. Start the configured service with
+`yarn test:up` before running the tests, and stop it afterwards with `yarn test:down`.
+The CI workflow starts and stops this service automatically.
 
 ## Original version available here:
 
