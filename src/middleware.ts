@@ -84,15 +84,27 @@ export const querySparql = (blazeUrl: string) =>
     return data.results.bindings;
   };
 
-const parseKV = (input: string): Record<string, string> =>
-  input
-    .split(",")
-    .map(x => x.split("="))
-    .reduce((acc, cur) => {
-      const [k, v] = cur;
-      acc[k] = v;
-      return acc;
-    }, {} as Record<string, string>);
+function parseKV(input: string): Record<string, string> {
+  const entries = input.split(",");
+  const result: Record<string, string> = {};
+
+  for (const entry of entries) {
+    const separator = entry.indexOf("=");
+    if (separator <= 0 || separator === entry.length - 1) {
+      throw new Error("Unable to parse Blazegraph commit response: invalid statistics entry");
+    }
+
+    const key = entry.slice(0, separator).trim();
+    const value = entry.slice(separator + 1).trim();
+    if (!key || !value) {
+      throw new Error("Unable to parse Blazegraph commit response: invalid statistics entry");
+    }
+
+    result[key] = value;
+  }
+
+  return result;
+}
 
 export interface CommitStats {
   query: Record<string, string>;
@@ -100,12 +112,17 @@ export interface CommitStats {
 }
 
 function parseCommitResults(result: string): CommitStats {
-  const [first, second] = Array.from(result.matchAll(/<p>(?<x>.*?)<\/p\s*>/g)).map(m => m[1]);
+  const paragraphs = Array.from(result.matchAll(/<p>([\\s\\S]*?)<\\/p\\s*>/gi))
+    .map(match => match[1].trim());
+
+  if (paragraphs.length < 2 || !paragraphs[0] || !paragraphs[1]) {
+    throw new Error("Unable to parse Blazegraph commit response: expected query and update statistics");
+  }
 
   return {
-    query: parseKV(first),
-    update: parseKV(second.replace(/^COMMIT:\s+/, ""))
-  }
+    query: parseKV(paragraphs[0]),
+    update: parseKV(paragraphs[1].replace(/^COMMIT:\\s*/i, ""))
+  };
 }
 
 /**
