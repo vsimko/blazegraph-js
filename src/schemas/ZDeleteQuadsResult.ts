@@ -29,8 +29,8 @@ export const ZDeleteQuadsResult = z.string().nonempty().transform((input, ctx): 
   if (
     attributes.modified === undefined ||
     attributes.milliseconds === undefined ||
-    !/^[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][+-]?\\d+)?$/.test(attributes.modified.trim()) ||
-    !/^[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][+-]?\\d+)?$/.test(attributes.milliseconds.trim()) ||
+    !/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/.test(attributes.modified.trim()) ||
+    !/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/.test(attributes.milliseconds.trim()) ||
     !Number.isFinite(modified) ||
     !Number.isFinite(milliseconds)
   ) {
