@@ -165,7 +165,7 @@ export const readQuads = (blazeUrl: string) =>
     let fullUrl = `${blazeUrl}?GETSTMTS&includeInferred=${withInferred}&${urlEncodePattern(parse)}`
     if (Array.isArray(parse.graphs)) {
       for (const g of parse.graphs) {
-        fullUrl += `&c=${g}`;
+        fullUrl += `&${urlParam("c", g)}`;
       }
     }
 
