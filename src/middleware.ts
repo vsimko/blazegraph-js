@@ -112,7 +112,7 @@ export interface CommitStats {
 }
 
 function parseCommitResults(result: string): CommitStats {
-  const paragraphs = Array.from(result.matchAll(/<p>([\\s\\S]*?)<\\/p\\s*>/gi))
+  const paragraphs = Array.from(result.matchAll(/<p>([\s\S]*?)<\/p\s*>/gi))
     .map(match => match[1].trim());
 
   if (paragraphs.length < 2 || !paragraphs[0] || !paragraphs[1]) {
@@ -121,7 +121,7 @@ function parseCommitResults(result: string): CommitStats {
 
   return {
     query: parseKV(paragraphs[0]),
-    update: parseKV(paragraphs[1].replace(/^COMMIT:\\s*/i, ""))
+    update: parseKV(paragraphs[1].replace(/^COMMIT:\s*/i, ""))
   };
 }
 
