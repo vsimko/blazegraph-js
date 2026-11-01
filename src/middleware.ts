@@ -149,7 +149,7 @@ export const checkPatternExistence = (blazeUrl: string) =>
     let fullUrl = `${blazeUrl}?HASSTMT&includeInferred=${withInferred}&${urlEncodePattern(parse)}`
     if (Array.isArray(parse.graphs)) {
       for (const g of parse.graphs) {
-        fullUrl += `&c=${g}`;
+        fullUrl += `&${urlParam("c", g)}`;
       }
     }
 
