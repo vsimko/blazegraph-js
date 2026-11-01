@@ -8,11 +8,11 @@ export interface ParsedStats {
 export type DeleteQuadsResult = z.infer<typeof ZDeleteQuadsResult>;
 
 function parseDeleteStats(input: string): ParsedStats | null {
-  const dataElement = input.match(/<data\\b([^>]*)\\/?\\s*>/i);
+  const dataElement = input.match(/<data\b([^>]*)\/?\s*>/i);
   if (!dataElement) return null;
 
   const attributes: Record<string, string> = {};
-  const attributePattern = /([A-Za-z_:][\\w:.-]*)\\s*=\\s*(["'])(.*?)\\2/g;
+  const attributePattern = /([A-Za-z_:][\w:.-]*)\s*=\s*(["'])(.*?)\2/g;
   let match: RegExpExecArray | null;
   while ((match = attributePattern.exec(dataElement[1])) !== null) {
     attributes[match[1]] = match[3];
@@ -21,8 +21,8 @@ function parseDeleteStats(input: string): ParsedStats | null {
   if (
     attributes.modified === undefined ||
     attributes.milliseconds === undefined ||
-    !/^[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][+-]?\\d+)?$/.test(attributes.modified.trim()) ||
-    !/^[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][+-]?\\d+)?$/.test(attributes.milliseconds.trim())
+    !/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/.test(attributes.modified.trim()) ||
+    !/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/.test(attributes.milliseconds.trim())
   ) return null;
 
   const modified = Number(attributes.modified);
